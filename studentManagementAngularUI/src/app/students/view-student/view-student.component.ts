@@ -34,6 +34,9 @@ export class ViewStudentComponent implements OnInit {
     }
   }
 
+  isNewStudent = true;
+  header = ''
+
   genderList: Gender[] = [];
 
   constructor(private readonly studentServices: StudentService,
@@ -48,11 +51,23 @@ export class ViewStudentComponent implements OnInit {
         this.studentId = params.get('id');
 
         if (this.studentId) {
-          this.studentServices.getStudent(this.studentId).subscribe(
-            (successResponse) => {
-              this.student = successResponse;
-            }
-          );
+          if (this.studentId.toLowerCase() === 'Add'.toLowerCase()) {
+            // New
+            this.isNewStudent = true;
+            this.header = 'Add New Student'
+          } else {
+            // Edit
+            this.isNewStudent = false;
+            this.header = 'Edit Student'
+
+            this.studentServices.getStudent(this.studentId).subscribe(
+              (successResponse) => {
+                this.student = successResponse;
+              }
+            );
+          }
+
+
 
           this.genderService.getGenderList()
           .subscribe(
@@ -71,13 +86,7 @@ export class ViewStudentComponent implements OnInit {
       (successResponse) => {
         this.snackbar.open('Student Updated Successfully', undefined, {
           duration: 2000
-
         });
-
-        setTimeout(() => {
-          this.router.navigateByUrl('students');
-          console.log('runnn');
-        }, 2000);
       },
       (errorResponse) => {
         console.log('some Error');
@@ -93,7 +102,28 @@ export class ViewStudentComponent implements OnInit {
           duration: 2000
         });
 
+        setTimeout(() => {
+          this.router.navigateByUrl('students');
+        }, 2000);
 
+      },
+      (errorResponse) => {
+        console.log('someError');
+      }
+    )
+  }
+
+  onAdd(): void {
+    this.studentServices.addStudent(this.student)
+    .subscribe(
+      (successResponse) => {
+        this.snackbar.open('Student added successfully', undefined, {
+          duration: 2000
+        });
+
+        setTimeout(() => {
+          this.router.navigateByUrl(`students/${successResponse.id}`)
+        }, 2000);
       },
       (errorResponse) => {
         console.log('someError');
