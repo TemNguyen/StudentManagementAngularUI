@@ -6,9 +6,10 @@ const app = express();
 
 // Serve only the static files form the dist directory
 // app.use(express.static('./dist/studentManagementAngularUI'));
+app.use(express.static(__dirname + '/dist'));
 
 app.get('/*', (req, res) =>
-    res.sendFile('./src/index.html', {root: 'dist/'}),
+    res.sendFile(path.join('/index.html')),
 );
 
 // Start the app by listening on the default Heroku port
