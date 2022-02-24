@@ -8,7 +8,7 @@ const app = express();
 app.use(express.static('./dist/dotnetcorestudentmanagement'));
 
 app.get('/*', (req, res) =>
-    res.sendFile('index.html', {root: 'dist/dotnetcorestudentmanagement/'}),
+    res.sendFile('./src/index.html', {root: 'dist/dotnetcorestudentmanagement/'}),
 );
 
 // Start the app by listening on the default Heroku port
